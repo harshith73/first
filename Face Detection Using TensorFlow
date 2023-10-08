@@ -1,0 +1,28 @@
+import tensorflow as tf
+import cv2
+
+# Load the pre-trained face detector model
+model = tf.keras.models.load_model('ssd_mobilenet_v2_face_detector.h5')
+
+# Read the image
+img = cv2.imread('image.jpg')
+
+# Convert the image to RGB
+img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+
+# Detect faces in the image
+detections = model.predict(img)
+
+# Draw bounding boxes around the detected faces
+for detection in detections:
+    x, y, w, h, score = detection
+    cv2.rectangle(img, (x, y), (x + w, y + h), (0, 255, 0), 2)
+
+# Display the image
+cv2.imshow('Image', img)
+
+# Wait for a key press
+cv2.waitKey(0)
+
+# Close all windows
+cv2.destroyAllWindows()
