@@ -1,0 +1,83 @@
+import numpy as np
+import pandas as pd
+from sklearn.preprocessing import StandardScaler
+from sklearn.model_selection import train_test_split
+from sklearn import svm
+from sklearn.metrics import accuracy_score
+data=pd.read_csv('/content/diabetes.csv')
+data.head()
+#the statistical data measures of the data
+data.describe()
+#checking the outcome 0=non-diabetic,1=diabetic
+data['Outcome'].value_counts()
+#checking the mean for the parameter outcome
+data.groupby('Outcome').mean()
+#separting the data what we want
+x=data.drop(columns='Outcome',axis=1)
+y=data['Outcome']
+scaler=StandardScaler()
+scaler.fit(x)
+scaler.transform(x)
+xtrain,xtest,ytrain,ytest=train_test_split(x,y,test_size=0.2,stratify=y,random_state=4)
+algoforpredict=svm.SVC()
+xtrainpredict=algoforpredict.predict(xtrain)
+accuracy=accuracy_score(xtrainpredict,ytrain)
+print("accuraycy of my model: ",accuracy)
+#testing
+xtesty=algoforpredict.predict(xtest)
+accuracytest=accuracy_score(xtesty,ytest)
+print("accuracy for test: ",accuracytest)
+i=(4,110,92,0,0,37.6,0,191,30)
+id=np.asarray(i)
+print(id)
+idr=id.reshape(1,-1)
+print(idr)
+
+
+print("Enter Your Name:")
+name = input()
+
+print("Are you pregnant? (yes or no):")
+p = input()
+if p == "yes":
+    print("Enter How many times:")
+    pr = int(input())
+    k = pr
+else:
+    k = 0
+
+print("Enter your Glucose level:")
+glucose = float(input())
+
+print("Enter your Blood Pressure:")
+bloodpressure = float(input())
+
+print("Enter your Skin thickness:")
+skin = float(input())
+
+print("Enter your Insulin Level:")
+insulin = float(input())
+
+print("Enter Your BMI: ")
+bmi = float(input())
+
+print("Diabetes Pedigree Function:")
+pgf = float(input())
+
+print("Enter your Age:")
+age = int(input())
+
+# Create the input array
+ding=[k, glucose, bloodpressure, skin, insulin, bmi, pgf, age]
+ding_reshape=np.array(ding).reshape(1,-1)
+
+# Standardize the input
+stds=scaler.transform(ding_reshape)
+
+# Make a prediction using algoforpredict
+prediction=algoforpredict.predict(stds)
+
+if prediction[0]==0:
+    print(f"Dear {name}, you are not a diabetic patient.")
+else:
+    print(f"Dear {name}, you are a diabetic patient.")
